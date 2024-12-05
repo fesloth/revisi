@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('workers_id')->constrained('workers')->cascadeOnDelete();
             $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('urgent')->default(false);
@@ -20,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('task_user', function(Blueprint $table) {
+        Schema::create('task_user', function (Blueprint $table) {
             $table->foreignId('task_id')->constrained();
             $table->foreignId('user_id')->constrained();
         });

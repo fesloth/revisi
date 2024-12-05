@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Enums\TaskStatus;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
@@ -26,6 +27,9 @@ class TasksKanbanBoard extends KanbanBoard
     protected function getEditModalFormSchema(null|int $recordId): array
     {
         return [
+            // Select::make('workers_id')
+            //     ->relationship('workers', 'name')
+            //     ->required(),
             TextInput::make('title'),
             Textarea::make('description'),
             TextInput::make('progress')->numeric(),

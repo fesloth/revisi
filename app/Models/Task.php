@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 use Mokhosh\FilamentKanban\Concerns\HasRecentUpdateIndication;
@@ -22,5 +23,10 @@ class Task extends Model implements Sortable
     public function team()
     {
         return $this->belongsToMany(User::class, 'task_user');
+    }
+
+    public function workers(): BelongsTo
+    {
+        return $this->belongsTo(Worker::class);
     }
 }
