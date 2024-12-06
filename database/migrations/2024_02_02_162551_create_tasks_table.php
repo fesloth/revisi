@@ -14,7 +14,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->boolean('urgent')->default(false);
             $table->tinyInteger('progress')->default(0);
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained('users');
             $table->string('status')->default('Todo');
             $table->unsignedInteger('order_column');
             $table->timestamps();

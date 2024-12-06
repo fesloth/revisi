@@ -27,6 +27,9 @@ class TasksKanbanBoard extends KanbanBoard
     protected function getEditModalFormSchema(null|int $recordId): array
     {
         return [
+            // Select::make('task_user')
+            //     ->relationship('users', 'name')
+            //     ->required(),
             TextInput::make('title'),
             Textarea::make('description'),
             TextInput::make('progress')->numeric(),
