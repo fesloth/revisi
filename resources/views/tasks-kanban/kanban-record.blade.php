@@ -38,6 +38,6 @@
 
     <div class="relative mt-2">
         <div class="absolute h-1 rounded-full bg-sky-500" style="width: {{ $record->progress }}%"></div>
-        <div class="h-1 bg-gray-200 rounded-full"></div>
+        <div class="h-1 bg-gray-200 rounded-full"></div>        
     </div>
 </div>
