@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\WorkerResource\Pages;
-use App\Filament\Resources\WorkerResource\RelationManagers;
-use App\Models\Worker;
+use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 
-class WorkerResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Worker::class;
+    protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
@@ -61,6 +61,7 @@ class WorkerResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -79,9 +80,9 @@ class WorkerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWorkers::route('/'),
-            'create' => Pages\CreateWorker::route('/create'),
-            'edit' => Pages\EditWorker::route('/{record}/edit'),
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }

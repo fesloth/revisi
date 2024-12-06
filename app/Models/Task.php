@@ -24,9 +24,4 @@ class Task extends Model implements Sortable
     {
         return $this->belongsToMany(User::class, 'task_user');
     }
-
-    public function workers(): BelongsTo
-    {
-        return $this->belongsTo(Worker::class);
-    }
 }

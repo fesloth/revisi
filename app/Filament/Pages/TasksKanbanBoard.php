@@ -5,10 +5,10 @@ namespace App\Filament\Pages;
 use App\Enums\TaskStatus;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
+use Filament\Forms\Components\Toggle;
 
 class TasksKanbanBoard extends KanbanBoard
 {
@@ -27,12 +27,11 @@ class TasksKanbanBoard extends KanbanBoard
     protected function getEditModalFormSchema(null|int $recordId): array
     {
         return [
-            // Select::make('workers_id')
-            //     ->relationship('workers', 'name')
-            //     ->required(),
             TextInput::make('title'),
             Textarea::make('description'),
             TextInput::make('progress')->numeric(),
+            Toggle::make('urgent')
+                ->onColor('warning')
         ];
     }
 
@@ -44,6 +43,8 @@ class TasksKanbanBoard extends KanbanBoard
                 ->form([
                     TextInput::make('title'),
                     Textarea::make('description'),
+                    Toggle::make('urgent')
+                        ->onColor('warning')
                 ])
                 ->mutateFormDataUsing(function ($data) {
                     $data['user_id'] = auth()->id();
