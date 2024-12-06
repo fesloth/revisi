@@ -13,16 +13,17 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('urgent')->default(false);
+            $table->string('label');
             $table->tinyInteger('progress')->default(0);
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('status')->default('Todo');
             $table->unsignedInteger('order_column');
             $table->timestamps();
         });
 
         Schema::create('task_user', function (Blueprint $table) {
-            $table->foreignId('task_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         });
     }
 };

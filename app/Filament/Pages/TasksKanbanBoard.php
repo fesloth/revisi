@@ -31,7 +31,8 @@ class TasksKanbanBoard extends KanbanBoard
             //     ->relationship('users', 'name')
             //     ->required(),
             TextInput::make('title'),
-            Textarea::make('description'),
+            TextInput::make('label'),
+            TextArea::make('description'),
             TextInput::make('progress')->numeric(),
             Toggle::make('urgent')
                 ->onColor('warning')
@@ -45,7 +46,8 @@ class TasksKanbanBoard extends KanbanBoard
                 ->model(Task::class)
                 ->form([
                     TextInput::make('title'),
-                    Textarea::make('description'),
+                    TextInput::make('label'),
+                    TextArea::make('description'),
                     Toggle::make('urgent')
                         ->onColor('warning')
                 ])
