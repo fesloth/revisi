@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Enums\TaskStatus;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -38,7 +39,6 @@ class TasksKanbanBoard extends KanbanBoard
             ColorPicker::make('color')
                 ->columnSpanFull(),
             TextArea::make('description'),
-            TextInput::make('progress')->numeric(),
             Toggle::make('urgent')
                 ->onColor('warning'),
         ];

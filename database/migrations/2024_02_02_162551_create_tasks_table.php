@@ -15,8 +15,11 @@ return new class extends Migration
             $table->boolean('urgent')->default(false);
             $table->string('label')->nullable();
             $table->string('color')->nullable();
-            $table->tinyInteger('progress')->default(0);
+            $table->string('checklist')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('label_id')->constrained('labels')->cascadeOnDelete();
+            $table->foreignId('color_id')->constrained('labels')->cascadeOnDelete();
+            $table->foreignId('checklist_id')->constrained('checklists')->cascadeOnDelete();
             $table->string('status')->default('Todo');
             $table->unsignedInteger('order_column');
             $table->timestamps();

@@ -40,9 +40,4 @@ id="{{ $record->id }}"
             <div class="w-8 h-8 transition-all bg-gray-200 border-2 border-white rounded-full"></div>
         @endforeach
     </div> --}}
-
-    <div style="position: relative; margin-top: 0.5rem;">
-        <div style="position: absolute; height: 0.25rem; border-radius: 9999px; background-color: #0ea5e9; width: {{ $record->progress }}%;"></div>
-        <div style="height: 0.25rem; background-color: #e5e7eb; border-radius: 9999px;"></div>
-    </div>
 </div>

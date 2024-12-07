@@ -3,15 +3,23 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Mokhosh\FilamentKanban\Concerns\HasRecentUpdateIndication;
+use Spatie\EloquentSortable\SortableTrait;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens,
+        HasFactory,
+        Notifiable,
+        // HasRoles
+        SortableTrait,
+        HasRecentUpdateIndication;
 
     /**
      * The attributes that are mass assignable.
@@ -20,8 +28,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'worker_id',
         'email',
+        'role',
+        'status',
         'password',
     ];
 
@@ -42,6 +51,15 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password' => 'hashed'
     ];
+
+    public static function ignoreTimestamps($should = true)
+    {
+        if ($should) {
+            static::$ignoreTimestampsOn = array_values(array_merge(static::$ignoreTimestampsOn, [static::class]));
+        } else {
+            static::$ignoreTimestampsOn = array_values(array_diff(static::$ignoreTimestampsOn, [static::class]));
+        }
+    }
 }

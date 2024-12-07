@@ -24,11 +24,11 @@ class StatsOverview extends BaseWidget
             Stat::make('Users', $userCount)
                 ->description($userCount . ' ' . 'user verified')
                 ->descriptionIcon('heroicon-m-check-circle')
-                ->color('warning'),
+                ->color('info'),
             Stat::make('Pending Task', $pendingTasks)
                 ->description($pendingTasks . ' ' . 'task')
                 ->descriptionIcon('heroicon-m-clock')
-                ->color('info'),
+                ->color('warning                        '),
             Stat::make('Finish Task', $finishedTasks)
                 ->description($finishedTasks . ' ' . 'task')
                 ->descriptionIcon('heroicon-m-check')
