@@ -16,7 +16,7 @@ class Task extends Model implements Sortable
 
     protected $guarded = [];
 
-    protected $fillable = ['title', 'description', 'urgent', 'label', 'progress', 'user_id', 'status'];
+    protected $fillable = ['title', 'description', 'urgent', 'label', 'color', 'progress', 'user_id', 'status'];
 
     public function user(): BelongsTo
     {

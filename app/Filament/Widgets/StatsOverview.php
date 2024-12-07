@@ -21,9 +21,18 @@ class StatsOverview extends BaseWidget
 
 
         return [
-            Stat::make('Users', $userCount),
-            Stat::make('Pending Task', $pendingTasks),
-            Stat::make('Finish Task', $finishedTasks),
+            Stat::make('Users', $userCount)
+                ->description($userCount . ' ' . 'user verified')
+                ->descriptionIcon('heroicon-m-check-circle')
+                ->color('warning'),
+            Stat::make('Pending Task', $pendingTasks)
+                ->description($pendingTasks . ' ' . 'task')
+                ->descriptionIcon('heroicon-m-clock')
+                ->color('info'),
+            Stat::make('Finish Task', $finishedTasks)
+                ->description($finishedTasks . ' ' . 'task')
+                ->descriptionIcon('heroicon-m-check')
+                ->color('success'),
         ];
     }
 }

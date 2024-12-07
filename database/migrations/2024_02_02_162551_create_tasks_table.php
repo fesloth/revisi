@@ -13,7 +13,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('urgent')->default(false);
-            $table->string('label');
+            $table->string('label')->nullable();
+            $table->string('color')->nullable();
             $table->tinyInteger('progress')->default(0);
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('status')->default('Todo');

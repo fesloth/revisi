@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Enums\TaskStatus;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
@@ -20,6 +21,8 @@ class TasksKanbanBoard extends KanbanBoard
 
     protected static string $statusView = 'tasks-kanban.kanban-status';
 
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
     protected static string $model = Task::class;
 
     protected static string $statusEnum = TaskStatus::class;
@@ -32,10 +35,12 @@ class TasksKanbanBoard extends KanbanBoard
             //     ->required(),
             TextInput::make('title'),
             TextInput::make('label'),
+            ColorPicker::make('color')
+                ->columnSpanFull(),
             TextArea::make('description'),
             TextInput::make('progress')->numeric(),
             Toggle::make('urgent')
-                ->onColor('warning')
+                ->onColor('warning'),
         ];
     }
 
@@ -46,7 +51,6 @@ class TasksKanbanBoard extends KanbanBoard
                 ->model(Task::class)
                 ->form([
                     TextInput::make('title'),
-                    TextInput::make('label'),
                     TextArea::make('description'),
                     Toggle::make('urgent')
                         ->onColor('warning')

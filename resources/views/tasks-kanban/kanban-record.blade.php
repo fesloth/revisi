@@ -1,5 +1,7 @@
+{{-- @extends('tasks-kanban.main') --}}
+
 <div
-    id="{{ $record->id }}"
+id="{{ $record->id }}"
     wire:click="recordClicked('{{ $record->id }}', {{ @json_encode($record) }})"
     class="px-4 py-2 font-medium text-gray-600 transition bg-white rounded-lg record dark:bg-gray-700 cursor-grab dark:text-gray-200"
     @if($record->just_updated)
@@ -14,30 +16,33 @@
         "
     @endif
 >
-    <div class="flex justify-between">
-        <div>
-            {{ $record->title }}
 
+    <div style="display: flex; justify-content:space-between;">
+        <div>
             @if ($record->urgent)
-                <x-heroicon-s-star class="inline-block w-4 h-4 mb-[10px] text-yellow-500"/>
-            @endif
+            <x-heroicon-s-star style="width: 20px; height: 20px; color: #eab304; margin-bottom:8px"/>
+        @endif
+            <div style="margin-bottom: 8px; background-color: {{ $record->color }}; font-weight: bold; font-size: 11px; width: auto; padding: 2px 5px; border-radius: 5px;">
+                {{ $record->label }}
+            </div>
         </div>
 
-        <div class="text-xs text-right text-gray-400">{{ $record->owner }}</div>
+        <div class="text-xs text-right text-gray-400">{{ $record->user->name }}</div>
     </div>
+    {{ $record->title }}
 
-    <div class="pl-2 mt-2 mb-2 text-xs text-gray-400 border-l-4">
+    <div class="text-xs text-gray-400" style="padding-left: 8px; margin-bottom: 8px; border-left-width: 2px; margin-top: 8px;">
         {{ $record->description }}
     </div>
 
-    <div class="flex -space-x-3 hover:-space-x-1">
+    {{-- <div class="flex -space-x-3 hover:-space-x-1">
         @foreach($record->team as $member)
             <div class="w-8 h-8 transition-all bg-gray-200 border-2 border-white rounded-full"></div>
         @endforeach
-    </div>
+    </div> --}}
 
-    <div class="relative mt-2">
-        <div class="absolute h-1 rounded-full bg-sky-500" style="width: {{ $record->progress }}%"></div>
-        <div class="h-1 bg-gray-200 rounded-full"></div>        
+    <div style="position: relative; margin-top: 0.5rem;">
+        <div style="position: absolute; height: 0.25rem; border-radius: 9999px; background-color: #0ea5e9; width: {{ $record->progress }}%;"></div>
+        <div style="height: 0.25rem; background-color: #e5e7eb; border-radius: 9999px;"></div>
     </div>
 </div>
