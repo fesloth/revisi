@@ -9,7 +9,7 @@ class TaskUser extends Model
 {
     use HasFactory;
 
-    public $timestaps = false;
+    public $timestamps = false;
 
     protected $table = 'task_user';
 

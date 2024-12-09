@@ -26,14 +26,11 @@ class Task extends Model implements Sortable
         });
     }
 
+    // user
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function label()
-    {
-        return $this->belongsTo(Label::class);
     }
 
     public function users(): BelongsToMany
@@ -46,15 +43,25 @@ class Task extends Model implements Sortable
         return $this->hasMany(TaskUser::class);
     }
 
+    // label
+
+    public function label()
+    {
+        return $this->belongsTo(Label::class);
+    }
+
+
     public function labels()
     {
-        return $this->belongsToMany(Label::class, 'label_task');
+        return $this->belongsToMany(Label::class, 'label_task', 'task_id', 'label_id');
     }
 
     public function color(): BelongsTo
     {
         return $this->belongsTo(Label::class);
     }
+
+    // checklist
 
     public function checklist(): BelongsTo
     {

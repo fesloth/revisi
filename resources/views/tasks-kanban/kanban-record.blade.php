@@ -22,13 +22,11 @@ id="{{ $record->id }}"
             @if ($record->urgent)
             <x-heroicon-s-star style="width: 20px; height: 20px; color: #eab304; margin-bottom:8px"/>
         @endif
-        {{-- <div style="margin-bottom: 8px; background-color: #d33832; font-weight: bold; font-size: 11px; width: auto; padding: 2px 5px; border-radius: 5px;">
-            Important
-        </div> --}}
-            <div style="margin-bottom: 8px; background-color: {{ $record->color }}; font-weight: bold; font-size: 11px; width: auto; padding: 2px 5px; border-radius: 5px;">
-                {{ $record->label }}
-            </div>
+
+        <div style="margin-bottom: 8px; background-color:  {{ $record->labels->color ?? ' '}}; font-weight: bold; font-size: 11px; width: auto; padding: 2px 5px; border-radius: 5px;">
+             {{ $record->labels->name ?? ' '}}
         </div>
+    </div>
 
         <div class="text-xs text-right text-gray-400">{{ $record->user->name }}</div>
     </div>
@@ -38,3 +36,4 @@ id="{{ $record->id }}"
         {{ $record->description }}
     </div>
 </div>
+

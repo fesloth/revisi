@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\TaskStatus;
+use App\Models\Label;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -36,13 +37,17 @@ class TasksKanbanBoard extends KanbanBoard
     {
         return [
             TextInput::make('title'),
-            Select::make('labels_id')
+            Select::make('labels')
                 ->multiple()
-                ->relationship('labels', 'name')
+                ->options(Label::pluck('name', 'id')->toArray())
                 ->createOptionForm([
                     TextInput::make('name')->required(),
                     ColorPicker::make('color')->required(),
-                ])
+                ])->createOptionUsing(function (array $data) {
+                    return Label::create(array_merge($data, [
+                        'user_id' => auth()->id(),
+                    ]))->id;
+                })
                 ->required(),
             TextArea::make('description'),
             Toggle::make('urgent')

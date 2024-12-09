@@ -9,7 +9,7 @@ class LabelUser extends Model
 {
     use HasFactory;
 
-    public $timestaps = false;
+    public $timestamps = false;
 
     protected $table = 'label_task';
 

@@ -13,18 +13,29 @@ class Label extends Model
 
     protected $fillable = ['name', 'color', 'user_id'];
 
+    // public function tasks()
+    // {
+    //     return $this->belongsToMany(Task::class, 'task_user');
+    // }
+
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'task_user');
-    }
-
-    public function task()
-    {
-        return $this->belongsTo(Task::class);
+        return $this->belongsToMany(Task::class, 'labels_id', 'task_user', 'label_id', 'task_id');
     }
 
     public function labelUser()
     {
         return $this->hasMany(LabelUser::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($label) {
+            if (auth()->check()) {
+                $label->user_id = auth()->id();
+            }
+        });
     }
 }
