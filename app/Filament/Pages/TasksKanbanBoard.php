@@ -25,8 +25,6 @@ class TasksKanbanBoard extends KanbanBoard
 
     protected static string $statusView = 'tasks-kanban.kanban-status';
 
-    protected static string $listener = 'tasks-kanban.kanban-deleted';
-
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static string $model = Task::class;
@@ -37,7 +35,7 @@ class TasksKanbanBoard extends KanbanBoard
     {
         return [
             TextInput::make('title'),
-            Select::make('labels')
+            Select::make('label_id')
                 ->multiple()
                 ->options(Label::pluck('name', 'id')->toArray())
                 ->createOptionForm([
