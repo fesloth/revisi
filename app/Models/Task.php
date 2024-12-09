@@ -17,12 +17,18 @@ class Task extends Model implements Sortable
 
     protected $guarded = [];
 
-    protected $fillable = ['title', 'description', 'urgent', 'labels_id', 'user_id', 'status'];
+    protected $fillable = ['title', 'description', 'urgent', 'label_id', 'user_id', 'status'];
 
     protected static function booted()
     {
         static::created(function ($task) {
+            // Mengaitkan pengguna yang membuat task
             $task->users()->attach(auth()->id());
+
+            // Mengaitkan label jika label_id ada
+            if ($task->label_id) {
+                $task->labels()->attach($task->label_id);
+            }
         });
     }
 

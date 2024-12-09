@@ -26,9 +26,13 @@ id="{{ $record->id }}"
             Important
         </div> --}}
 
-            <div style="margin-bottom: 8px; background-color:  {{ $record->labels->first()?->color ?? ' '}}; font-weight: bold; font-size: 11px; width: auto; padding: 2px 5px; border-radius: 5px;">
-                {{ $record->labels->first()?->name ?? ' '}}
-            </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            @foreach ($record->labels as $label)
+                <div style="background-color: {{ $label->color ?? ' ' }}; font-weight: bold; font-size: 11px; padding: 2px 5px; border-radius: 5px; margin-bottom: 8px;">
+                    {{ $label->name ?? ' ' }}
+                </div>
+            @endforeach
+        </div>
         </div>
 
         <div class="text-xs text-right text-gray-400">{{ $record->user->name }}</div>
@@ -40,3 +44,4 @@ id="{{ $record->id }}"
     </div>
 </div>
 
+{{-- agar ini terbaca nya $record ke tabel labels yang color nya sesuai dengan task_id, task_id ada di tabel label_user --}}

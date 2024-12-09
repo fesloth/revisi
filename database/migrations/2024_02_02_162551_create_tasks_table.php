@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('urgent')->default(false);
-            $table->foreignId('labels_id')->constrained('labels')->cascadeOnDelete();
+            $table->foreignId('label_id')->nullable()->constrained('labels')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('status')->default('Todo');
             $table->unsignedInteger('order_column');
