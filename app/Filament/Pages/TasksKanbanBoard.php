@@ -5,8 +5,10 @@ namespace App\Filament\Pages;
 use App\Enums\TaskStatus;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
@@ -22,6 +24,8 @@ class TasksKanbanBoard extends KanbanBoard
 
     protected static string $statusView = 'tasks-kanban.kanban-status';
 
+    protected static string $listener = 'tasks-kanban.kanban-deleted';
+
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static string $model = Task::class;
@@ -31,13 +35,15 @@ class TasksKanbanBoard extends KanbanBoard
     protected function getEditModalFormSchema(null|int $recordId): array
     {
         return [
-            // Select::make('task_user')
-            //     ->relationship('users', 'name')
-            //     ->required(),
             TextInput::make('title'),
-            TextInput::make('label'),
-            ColorPicker::make('color')
-                ->columnSpanFull(),
+            Select::make('labels_id')
+                ->multiple()
+                ->relationship('labels', 'name')
+                ->createOptionForm([
+                    TextInput::make('name')->required(),
+                    ColorPicker::make('color')->required(),
+                ])
+                ->required(),
             TextArea::make('description'),
             Toggle::make('urgent')
                 ->onColor('warning'),
@@ -59,6 +65,17 @@ class TasksKanbanBoard extends KanbanBoard
                     $data['user_id'] = auth()->id();
 
                     return $data;
+                })
+                ->after(function (CreateAction $action) {
+                    $task = $action->getRecord();
+
+                    $exists = $task->where('user_id', auth()->id())->exists();
+
+                    if (!$exists) {
+                        $task->taskUsers()->create([
+                            'user_id' => auth()->id(),
+                        ]);
+                    }
                 })
         ];
     }

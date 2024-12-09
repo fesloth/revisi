@@ -9,5 +9,22 @@ class Label extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['label', 'color'];
+    protected $table = 'labels';
+
+    protected $fillable = ['name', 'color', 'user_id'];
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_user');
+    }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+
+    public function labelUser()
+    {
+        return $this->hasMany(LabelUser::class);
+    }
 }

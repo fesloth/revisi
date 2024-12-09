@@ -28,7 +28,7 @@ class StatsOverview extends BaseWidget
             Stat::make('Pending Task', $pendingTasks)
                 ->description($pendingTasks . ' ' . 'task')
                 ->descriptionIcon('heroicon-m-clock')
-                ->color('warning                        '),
+                ->color('warning'),
             Stat::make('Finish Task', $finishedTasks)
                 ->description($finishedTasks . ' ' . 'task')
                 ->descriptionIcon('heroicon-m-check')

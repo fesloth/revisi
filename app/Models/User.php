@@ -44,6 +44,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_user');
+    }
+
     /**
      * The attributes that should be cast.
      *

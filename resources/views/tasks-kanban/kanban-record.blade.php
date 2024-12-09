@@ -22,6 +22,9 @@ id="{{ $record->id }}"
             @if ($record->urgent)
             <x-heroicon-s-star style="width: 20px; height: 20px; color: #eab304; margin-bottom:8px"/>
         @endif
+        {{-- <div style="margin-bottom: 8px; background-color: #d33832; font-weight: bold; font-size: 11px; width: auto; padding: 2px 5px; border-radius: 5px;">
+            Important
+        </div> --}}
             <div style="margin-bottom: 8px; background-color: {{ $record->color }}; font-weight: bold; font-size: 11px; width: auto; padding: 2px 5px; border-radius: 5px;">
                 {{ $record->label }}
             </div>
@@ -34,10 +37,4 @@ id="{{ $record->id }}"
     <div class="text-xs text-gray-400" style="padding-left: 8px; margin-bottom: 8px; border-left-width: 2px; margin-top: 8px;">
         {{ $record->description }}
     </div>
-
-    {{-- <div class="flex -space-x-3 hover:-space-x-1">
-        @foreach($record->team as $member)
-            <div class="w-8 h-8 transition-all bg-gray-200 border-2 border-white rounded-full"></div>
-        @endforeach
-    </div> --}}
 </div>
