@@ -56,10 +56,9 @@ class Task extends Model implements Sortable
         return $this->belongsTo(Label::class);
     }
 
-
     public function labels()
     {
-        return $this->belongsToMany(Label::class, 'label_task', 'task_id', 'label_id');
+        return $this->belongsToMany(Label::class, 'label_task', 'task_id', 'label_id', 'task_user');
     }
 
     public function color(): BelongsTo

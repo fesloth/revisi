@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('urgent')->default(false);
             $table->foreignId('label_id')->nullable()->constrained('labels')->cascadeOnDelete();

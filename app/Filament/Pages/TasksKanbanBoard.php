@@ -6,8 +6,6 @@ use App\Enums\TaskStatus;
 use App\Models\Label;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
-use Filament\Actions\EditAction;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -35,8 +33,9 @@ class TasksKanbanBoard extends KanbanBoard
     {
         return [
             TextInput::make('title'),
-            Select::make('label_id')
+            Select::make('labels')
                 ->multiple()
+                ->label('Label')
                 ->options(Label::pluck('name', 'id')->toArray())
                 ->createOptionForm([
                     TextInput::make('name')->required(),
