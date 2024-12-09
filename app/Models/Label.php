@@ -13,9 +13,14 @@ class Label extends Model
 
     protected $fillable = ['name', 'color', 'user_id'];
 
+    // public function tasks()
+    // {
+    //     return $this->belongsToMany(Task::class, 'task_user');
+    // }
+
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'task_user', 'label_task');
+        return $this->belongsToMany(Task::class, 'task_user', 'label_id', 'task_id', 'label_task');
     }
 
     public function labelUser()
