@@ -9,5 +9,21 @@ class Checklist extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['checklist'];
+    protected $fillable = ['name', 'user_id'];
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_user', 'label_id', 'label_task');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($label) {
+            if (auth()->check()) {
+                $label->user_id = auth()->id();
+            }
+        });
+    }
 }

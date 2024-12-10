@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\TaskStatus;
+use App\Models\Checklist;
 use App\Models\Label;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
@@ -35,8 +36,8 @@ class TasksKanbanBoard extends KanbanBoard
             TextInput::make('title'),
             Select::make('labels')
                 ->multiple()
-                ->label('Label')
                 ->options(Label::pluck('name', 'id')->toArray())
+                ->label('Label')
                 ->createOptionForm([
                     TextInput::make('name')->required(),
                     ColorPicker::make('color')->required(),
@@ -52,6 +53,14 @@ class TasksKanbanBoard extends KanbanBoard
         ];
     }
 
+    protected function editRecord($recordId, array $data, array $state): void
+    {
+        $task = Task::find($recordId);
+
+        $task->update($data);
+        $task->labels()->sync($data['labels']);
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -60,6 +69,19 @@ class TasksKanbanBoard extends KanbanBoard
                 ->form([
                     TextInput::make('title'),
                     TextArea::make('description'),
+                    Select::make('labels')
+                        ->multiple()
+                        ->options(Label::pluck('name', 'id')->toArray())
+                        ->label('Label')
+                        ->createOptionForm([
+                            TextInput::make('name')->required(),
+                            ColorPicker::make('color')->required(),
+                        ])->createOptionUsing(function (array $data) {
+                            return Label::create(array_merge($data, [
+                                'user_id' => auth()->id(),
+                            ]))->id;
+                        })
+                        ->required(),
                     Toggle::make('urgent')
                         ->onColor('warning')
                 ])

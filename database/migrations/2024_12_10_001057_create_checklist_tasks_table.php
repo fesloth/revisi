@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('checklists', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->timestamps();
+        Schema::create('checklist_tasks', function (Blueprint $table) {
+            $table->foreignId('checklist_id')->constrained('checklists')->cascadeOnDelete();
+            $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
         });
     }
 
@@ -24,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('checklists');
+        Schema::dropIfExists('checklist_tasks');
     }
 };
