@@ -3,7 +3,6 @@
 namespace App\Filament\Pages;
 
 use App\Enums\TaskStatus;
-use App\Models\Checklist;
 use App\Models\Label;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
@@ -45,8 +44,7 @@ class TasksKanbanBoard extends KanbanBoard
                     return Label::create(array_merge($data, [
                         'user_id' => auth()->id(),
                     ]))->id;
-                })
-                ->required(),
+                }),
             TextArea::make('description'),
             Toggle::make('urgent')
                 ->onColor('warning'),
