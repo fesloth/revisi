@@ -76,7 +76,7 @@ class TasksKanbanBoard extends KanbanBoard
                 ->options($task ? $task->checklists->pluck('name', 'id')->toArray() : [])
                 ->columns(2)
                 ->gridDirection('row')
-                // belum selesai membuat fungsi agar apabila checkbox tidak checklist maka boolean nya akan kembali ke setelan awal default false(0)
+                // belum selesai membuat fungsi agar apabila checkbox tidak checklist maka boolean nya akan kembali ke setelan awal default false (0)
                 ->afterStateUpdated(function ($state) use ($task) {
                     foreach ($state as $checklistId) {
                         $isDone = in_array($checklistId, $state) ? true : false;
