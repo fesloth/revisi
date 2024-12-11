@@ -23,6 +23,7 @@ id="{{ $record->id }}"
             <x-heroicon-s-star style="width: 20px; height: 20px; color: #eab304; margin-bottom:8px"/>
         @endif
         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            {{-- Note: nanti bikin agar bisa ditekan sekali, maka name akan hilang hanya memunculkan color namun apabila ditekan sekali lagi akan kembali seperti semula --}}
             @foreach ($record->labels as $label)
                 <div style="background-color: {{ $label->color ?? ' ' }}; font-weight: bold; font-size: 11px; padding: 2px 5px; border-radius: 5px; margin-bottom: 8px; color: white;">
                     {{ $label->name ?? ' ' }}
@@ -36,11 +37,12 @@ id="{{ $record->id }}"
     <div class="text-xs text-gray-400" style="padding-left: 8px; margin-bottom: 10px; border-left-width: 2px; margin-top: 8px;">
         {{ $record->description }}
     </div>
+    {{-- Note: nanti bikin diatas checklist model team dan terlihan circle profile img pengguna yg di assign hrd ke task --}}
     @if($record->checklists->isNotEmpty())
-    <div style="margin-top: 8px; background-color: #4d4b4b;  width: 45px; height: 15px; border-radius: 3px; display: flex; justify-content: space-evenly; align-items: center;">
+    <div style="margin-top: 8px; background-color: #4d4b4b;  width: 45px; height: 25px; border-radius: 3px; display: flex; justify-content: space-evenly; align-items: center;">
         <x-heroicon-o-check style="width: 15px; height: 15px; color: #fff;"/>
         <p style="font-size: 12px;  color: #fff; padding-right: 5px;">
-            {{ $record->checklists->where('user_id', $record->user->id)->count() }}/{{ $record->checklists->where('user_id', $record->user->id)->first()?->id ?? ' ' }}
+            {{ $record->checklists->where('user_id', $record->user->id)->where('is_done', true)->count() }}/{{ $record->checklists->where('user_id', $record->user->id)->count() }}
         </p>
     </div>
     @endif
