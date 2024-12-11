@@ -11,3 +11,5 @@ This is an example app to show you how you can use and customize [Filament Kanba
 - `php artisan migrate --seed`
 - `npm install && npm run build`
 - `php artisan serve`
+
+<a href="https://filamentexamples.com">check this</a>
