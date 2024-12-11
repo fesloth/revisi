@@ -3,7 +3,9 @@
 namespace App\Filament\Pages;
 
 use App\Enums\TaskStatus;
+use App\Models\Checklist;
 use App\Models\Label;
+use App\Models\LabelUser;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\ColorPicker;
@@ -31,6 +33,8 @@ class TasksKanbanBoard extends KanbanBoard
 
     protected function getEditModalFormSchema(null|int $recordId): array
     {
+        $label = $recordId ? Label::find($recordId) : null;
+
         return [
             TextInput::make('title'),
             Select::make('labels')
@@ -40,14 +44,28 @@ class TasksKanbanBoard extends KanbanBoard
                 ->createOptionForm([
                     TextInput::make('name')->required(),
                     ColorPicker::make('color')->required(),
-                ])->createOptionUsing(function (array $data) {
+                ])
+                ->createOptionUsing(function (array $data) {
                     return Label::create(array_merge($data, [
                         'user_id' => auth()->id(),
                     ]))->id;
-                }),
+                })
+                ->default($label),
             TextArea::make('description'),
+            Select::make('checklists')
+                ->multiple()
+                ->options(Checklist::pluck('name', 'id')->toArray())
+                ->label('Checklists')
+                ->createOptionForm([
+                    TextInput::make('name')->required(),
+                ])
+                ->createOptionUsing(function (array $data) {
+                    return Checklist::create(array_merge($data, [
+                        'user_id' => auth()->id(),
+                    ]))->id;
+                }),
             Toggle::make('urgent')
-                ->onColor('warning'),
+                ->onColor('warning')
         ];
     }
 
@@ -57,6 +75,7 @@ class TasksKanbanBoard extends KanbanBoard
 
         $task->update($data);
         $task->labels()->sync($data['labels']);
+        $task->checklists()->sync($data['checklists']);
     }
 
     protected function getHeaderActions(): array
@@ -67,19 +86,6 @@ class TasksKanbanBoard extends KanbanBoard
                 ->form([
                     TextInput::make('title'),
                     TextArea::make('description'),
-                    Select::make('labels')
-                        ->multiple()
-                        ->options(Label::pluck('name', 'id')->toArray())
-                        ->label('Label')
-                        ->createOptionForm([
-                            TextInput::make('name')->required(),
-                            ColorPicker::make('color')->required(),
-                        ])->createOptionUsing(function (array $data) {
-                            return Label::create(array_merge($data, [
-                                'user_id' => auth()->id(),
-                            ]))->id;
-                        })
-                        ->required(),
                     Toggle::make('urgent')
                         ->onColor('warning')
                 ])

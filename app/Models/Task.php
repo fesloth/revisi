@@ -72,4 +72,9 @@ class Task extends Model implements Sortable
     {
         return $this->belongsTo(Checklist::class);
     }
+
+    public function checklists()
+    {
+        return $this->belongsToMany(Checklist::class, 'checklist_tasks', 'task_id', 'checklist_id');
+    }
 }
