@@ -78,7 +78,7 @@ class UserResource extends Resource
         ];
     }
 
-    public static function getPages(): array
+    public static function getPAges(): array
     {
         return [
             'index' => Pages\ListUsers::route('/'),

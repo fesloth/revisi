@@ -3,9 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\UserRole;
-use App\Enums\UserStatus;
 use App\Models\User;
-use Illuminate\Support\Collection;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 
 class RolesKanbanBoard extends KanbanBoard
