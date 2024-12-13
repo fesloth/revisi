@@ -15,6 +15,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "livewire/livewire": "^3.5",
         "mokhosh/filament-kanban": "^2.1",
         "shanerbaner82/panel-roles": "^0.0.3",
         "spatie/eloquent-sortable": "^4.1"

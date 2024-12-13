@@ -124,6 +124,7 @@ class TasksKanbanBoard extends KanbanBoard
                         ]);
                     }
                 })
+
         ];
     }
 }

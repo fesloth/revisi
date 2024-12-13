@@ -11,6 +11,7 @@ class StatsOverview extends BaseWidget
 {
     protected function getStats(): array
     {
+
         $userCount = User::count();
 
         $pendingTasks = Task::whereIn('status', ['todo', 'doing'])
