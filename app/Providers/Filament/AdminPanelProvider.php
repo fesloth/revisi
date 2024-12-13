@@ -27,12 +27,14 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Todo List')
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
             ])
             ->colors([
                 'primary' => '#7d42cf',
             ])
+            ->font('Lexend')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
