@@ -38,6 +38,7 @@ id="{{ $record->id }}"
         {{ $record->description }}
     </div>
     {{-- Note: nanti bikin diatas checklist model team dan terlihan circle profile img pengguna yg di assign hrd ke task --}}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
     @if($record->checklists->isNotEmpty())
     <div style="margin-top: 8px; background-color: #4d4b4b;  width: 45px; height: 25px; border-radius: 3px; display: flex; justify-content: space-evenly; align-items: center;">
         <x-heroicon-o-check style="width: 15px; height: 15px; color: #fff;"/>
@@ -46,5 +47,11 @@ id="{{ $record->id }}"
         </p>
     </div>
     @endif
+    <div style="display: flex; justify-content: center; align-items: center;">
+        @foreach($record->users as $member)
+            <div style="display: flex; justify-content: center; align-items: center; border: 1px solid #fff; border-radius: 100%; width: 32px; height: 32px; transition: opacity 1s linear;"><p style="font-size: 15px; text-align: center;">la</p></div>
+        @endforeach
+    </div>
+</div>
 </div>
 

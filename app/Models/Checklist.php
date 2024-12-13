@@ -26,8 +26,4 @@ class Checklist extends Model
             }
         });
     }
-
-    protected $casts = [
-        'is_done' => 'boolean',
-    ];
 }
