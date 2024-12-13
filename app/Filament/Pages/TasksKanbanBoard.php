@@ -7,6 +7,7 @@ use App\Models\Checklist;
 use App\Models\Label;
 use App\Models\LabelUser;
 use App\Models\Task;
+use App\Models\User;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
@@ -37,6 +38,10 @@ class TasksKanbanBoard extends KanbanBoard
         $task = Task::find($recordId);
 
         return [
+            Select::make('user_id')
+                ->label('Member')
+                ->options(User::pluck('name', 'id')->toArray())
+                ->required(),
             // belum bisa assign karyawan
             // bikin fitur delete (hanya pemnbuat task yg bisa men-delete task)
             TextInput::make('title'),

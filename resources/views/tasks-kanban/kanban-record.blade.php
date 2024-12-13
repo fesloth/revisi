@@ -49,7 +49,7 @@ id="{{ $record->id }}"
     @endif
     <div style="display: flex; justify-content: center; align-items: center;">
         @foreach($record->users as $member)
-            <div style="display: flex; justify-content: center; align-items: center; border: 1px solid #fff; border-radius: 100%; width: 32px; height: 32px; transition: opacity 1s linear;"><p style="font-size: 15px; text-align: center;">la</p></div>
+            <div style="display: flex; justify-content: center; align-items: center; border: 1px solid #fff; border-radius: 100%; width: 32px; height: 32px; transition: opacity 1s linear;"><p style="font-size: 15px; text-align: center;">{{ substr($record->user->name, 0, 2) }}</p></div>
         @endforeach
     </div>
 </div>
