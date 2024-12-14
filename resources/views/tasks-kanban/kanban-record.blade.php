@@ -1,5 +1,3 @@
-{{-- @extends('tasks-kanban.main') --}}
-
 <div
 id="{{ $record->id }}"
     wire:click="recordClicked('{{ $record->id }}', {{ @json_encode($record) }})"
@@ -54,4 +52,3 @@ id="{{ $record->id }}"
     </div>
 </div>
 </div>
-

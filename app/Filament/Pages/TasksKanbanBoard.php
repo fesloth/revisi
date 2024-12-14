@@ -81,13 +81,23 @@ class TasksKanbanBoard extends KanbanBoard
                 ->options(Checklist::pluck('name', 'id')->toArray())
                 ->columns(2)
                 ->gridDirection('row')
-                // belum selesai membuat fungsi agar apabila checkbox tidak checklist maka boolean nya akan kembali ke setelan awal default false (0)
                 ->afterStateUpdated(function ($state) use ($task) {
-                    foreach ($state as $checklistId) {
-                        $isDone = in_array($checklistId, $state) ? true : false;
-                        Checklist::where('id', $checklistId)->update(['is_done' => $isDone]);
+                    // Ensure that all checklists are updated with the correct 'is_done' status
+                    foreach (Checklist::all() as $checklist) {
+                        $isDone = in_array($checklist->id, $state);
+                        $checklist->update(['is_done' => $isDone]);
+
+                        // Insert or update checklist task relation
+                        if ($checklist->id) {
+                            $task->checklistTasks()->updateOrCreate(
+                                ['task_id' => $task->id, 'checklist_id' => $checklist->id],
+                                ['is_done' => $isDone]
+                            );
+                        }
                     }
                 }),
+
+
             Toggle::make('urgent')
                 ->onColor('warning')
         ];
@@ -97,20 +107,9 @@ class TasksKanbanBoard extends KanbanBoard
     {
         $task = Task::find($recordId);
 
-        if (!$task) {
-            throw new \Exception("Task not found.");
-        }
-
         $task->update($data);
         $task->labels()->sync($data['labels']);
         $task->checklists()->sync($data['checklists']);
-
-        foreach ($state['checklist_tasks'] as $checklistId) {
-            $task->checklistTasks()->updateOrCreate(
-                ['task_id' => $task->id, 'checklist_id' => $checklistId],
-                ['is_done' => true]
-            );
-        }
     }
 
     protected function getHeaderActions(): array
