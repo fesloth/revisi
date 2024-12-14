@@ -97,9 +97,20 @@ class TasksKanbanBoard extends KanbanBoard
     {
         $task = Task::find($recordId);
 
+        if (!$task) {
+            throw new \Exception("Task not found.");
+        }
+
         $task->update($data);
         $task->labels()->sync($data['labels']);
         $task->checklists()->sync($data['checklists']);
+
+        foreach ($state['checklist_tasks'] as $checklistId) {
+            $task->checklistTasks()->updateOrCreate(
+                ['task_id' => $task->id, 'checklist_id' => $checklistId],
+                ['is_done' => true]
+            );
+        }
     }
 
     protected function getHeaderActions(): array

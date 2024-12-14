@@ -20,9 +20,9 @@ class Checklist extends Model
     {
         parent::boot();
 
-        static::creating(function ($label) {
+        static::creating(function ($checklist) {
             if (auth()->check()) {
-                $label->user_id = auth()->id();
+                $checklist->user_id = auth()->id();
             }
         });
     }
