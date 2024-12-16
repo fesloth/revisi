@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
             ])
             ->colors([
-                'primary' => '#7d42cf',
+                'primary' => '#A594F9',
             ])
             ->font('Lexend')
             ->viteTheme('resources/css/filament/admin/theme.css')
