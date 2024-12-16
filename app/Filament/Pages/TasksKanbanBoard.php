@@ -39,16 +39,16 @@ class TasksKanbanBoard extends KanbanBoard
         $task = Task::find($recordId);
 
         return [
-            Select::make('user_id')
-                ->multiple()
-                ->label('Members')
-                ->options(User::pluck('name', 'id')->toArray())
-                ->afterStateHydrated(function (callable $set) use ($task) {
-                    if ($task) {
-                        $set('user_id', $task->users()->pluck('id')->toArray());
-                    }
-                })
-                ->required(),
+            // Select::make('user_id')
+            //     ->multiple()
+            //     ->label('Members')
+            //     ->options(User::pluck('name', 'id')->toArray())
+            //     ->afterStateHydrated(function (callable $set) use ($task) {
+            //         if ($task) {
+            //             $set('user_id', $task->users()->pluck('id')->toArray());
+            //         }
+            //     })
+            //     ->required(),
             // belum bisa assign karyawan
             // bikin fitur delete (hanya pemnbuat task yg bisa men-delete task)
             TextInput::make('title'),
@@ -96,7 +96,7 @@ class TasksKanbanBoard extends KanbanBoard
 
             CheckboxList::make('checklist_tasks')
                 ->label('')
-                ->options(Checklist::pluck('name', 'id')->toArray())
+                ->options($task ? $task->checklists->pluck('name', 'id')->toArray() : [])
                 ->columns(2)
                 ->default(fn() => $task
                     ? $task->checklists()->where('is_done', true)->pluck('id')->toArray()
