@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Enums\TaskStatus;
 use App\Models\Checklist;
+use App\Models\ChecklistTask;
 use App\Models\Label;
 use App\Models\LabelUser;
 use App\Models\Task;
@@ -45,59 +46,48 @@ class TasksKanbanBoard extends KanbanBoard
             // belum bisa assign karyawan
             // bikin fitur delete (hanya pemnbuat task yg bisa men-delete task)
             TextInput::make('title'),
-            // belum selesai membuat value label yang ada di database muncul
             Select::make('labels')
                 ->multiple()
-                ->options(fn(): array => Label::pluck('name', 'id')->toArray())
+                ->options(fn() => Label::pluck('name', 'id')->toArray())
                 ->label('Label')
                 ->preload()
-                ->createOptionForm([
-                    TextInput::make('name')->required(),
-                    ColorPicker::make('color')->required(),
-                ])
-                ->createOptionUsing(function (array $data) {
-                    return Label::create(array_merge($data, [
-                        'user_id' => auth()->id(),
-                    ]))->id;
-                })
-                ->default('label'),
+                ->default(fn() => $task ? $task->labels()->pluck('id')->toArray() : [])
+                ->afterStateHydrated(function (callable $set) use ($task) {
+                    if ($task) {
+                        $set('labels', $task->labels()->pluck('id')->toArray());
+                    }
+                }),
             TextArea::make('description'),
-            // mengubah select menjadi hanya input text dan membuat value nya tersimpan saat mengedit (sesuai task_id dan user_id)
             Select::make('checklists')
                 ->multiple()
                 ->options(Checklist::pluck('name', 'id')->toArray())
                 ->label('Checklists')
+                ->default(fn() => $task ? $task->checklists()->pluck('id')->toArray() : [])
                 ->createOptionForm([
                     TextInput::make('name')->required(),
                 ])
                 ->createOptionUsing(function (array $data) {
-                    return Checklist::create(array_merge($data, [
+                    return Checklist::create([
+                        'name' => $data['name'],
                         'user_id' => auth()->id(),
                         'is_done' => false,
-                    ]))->id;
+                    ])->id;
                 }),
+
             CheckboxList::make('checklist_tasks')
                 ->label('')
                 ->options(Checklist::pluck('name', 'id')->toArray())
                 ->columns(2)
-                ->gridDirection('row')
-                ->afterStateUpdated(function ($state) use ($task) {
-                    // Ensure that all checklists are updated with the correct 'is_done' status
-                    foreach (Checklist::all() as $checklist) {
-                        $isDone = in_array($checklist->id, $state);
-                        $checklist->update(['is_done' => $isDone]);
-
-                        // Insert or update checklist task relation
-                        if ($checklist->id) {
-                            $task->checklistTasks()->updateOrCreate(
-                                ['task_id' => $task->id, 'checklist_id' => $checklist->id],
-                                ['is_done' => $isDone]
-                            );
-                        }
+                ->default(fn() => $task
+                    ? $task->checklists()->where('is_done', true)->pluck('id')->toArray()
+                    : [])
+                ->afterStateHydrated(function (callable $set) use ($task) {
+                    if ($task) {
+                        $set('checklist_tasks', $task->checklists()->where('is_done', true)->pluck('id')->toArray());
                     }
                 }),
             Toggle::make('urgent')
-                ->onColor('warning')
+                ->onColor('warning'),
         ];
     }
 
@@ -105,9 +95,21 @@ class TasksKanbanBoard extends KanbanBoard
     {
         $task = Task::find($recordId);
 
-        $task->update($data);
-        $task->labels()->sync($data['labels']);
-        $task->checklists()->sync($data['checklists']);
+
+        if ($task) {
+            logger('Syncing Labels: ', $data['labels'] ?? []);
+            logger('Syncing Checklists: ', $data['checklists'] ?? []);
+
+            $task->update($data);
+
+            $task->labels()->sync($data['labels'] ?? []);
+            $task->checklists()->sync($data['checklists'] ?? []);
+
+            Checklist::whereIn('id', $data['checklists'] ?? [])->update(['is_done' => true]);
+            Checklist::whereNotIn('id', $data['checklists'] ?? [])->update(['is_done' => false]);
+        } else {
+            logger('Task not found for ID: ' . $recordId);
+        }
     }
 
     protected function getHeaderActions(): array

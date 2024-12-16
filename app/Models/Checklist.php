@@ -13,7 +13,7 @@ class Checklist extends Model
 
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'task_user', 'label_id', 'label_task');
+        return $this->belongsToMany(Task::class, 'task_user', 'label_id', 'label_task', 'checklist_tasks', 'checklist_id', 'task_id');
     }
 
     public static function boot()

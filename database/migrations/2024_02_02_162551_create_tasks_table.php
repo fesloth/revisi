@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('label_id')->nullable()->constrained('labels')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('status')->default('Todo');
+            $table->string('date');
             $table->unsignedInteger('order_column');
             $table->timestamps();
         });
