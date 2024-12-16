@@ -50,6 +50,15 @@ class TasksKanbanBoard extends KanbanBoard
                 ->multiple()
                 ->options(fn() => Label::pluck('name', 'id')->toArray())
                 ->label('Label')
+                ->createOptionForm([
+                    TextInput::make('name')->required(),
+                    ColorPicker::make('color')->required(),
+                ])
+                ->createOptionUsing(function (array $data) {
+                    return Label::create(array_merge($data, [
+                        'user_id' => auth()->id(),
+                    ]))->id;
+                })
                 ->preload()
                 ->default(fn() => $task ? $task->labels()->pluck('id')->toArray() : [])
                 ->afterStateHydrated(function (callable $set) use ($task) {
@@ -72,6 +81,11 @@ class TasksKanbanBoard extends KanbanBoard
                         'user_id' => auth()->id(),
                         'is_done' => false,
                     ])->id;
+                })
+                ->afterStateHydrated(function (callable $set) use ($task) {
+                    if ($task) {
+                        $set('checklists', $task->checklists()->pluck('id')->toArray());
+                    }
                 }),
 
             CheckboxList::make('checklist_tasks')
@@ -95,18 +109,26 @@ class TasksKanbanBoard extends KanbanBoard
     {
         $task = Task::find($recordId);
 
-
         if ($task) {
             logger('Syncing Labels: ', $data['labels'] ?? []);
             logger('Syncing Checklists: ', $data['checklists'] ?? []);
 
+            // Update task data
             $task->update($data);
 
+            // Sync labels and checklists
             $task->labels()->sync($data['labels'] ?? []);
             $task->checklists()->sync($data['checklists'] ?? []);
 
-            Checklist::whereIn('id', $data['checklists'] ?? [])->update(['is_done' => true]);
-            Checklist::whereNotIn('id', $data['checklists'] ?? [])->update(['is_done' => false]);
+            // Set is_done to false for checklists that are not selected
+            if (isset($data['checklist_tasks'])) {
+                // Update only the selected checklists
+                Checklist::whereIn('id', $data['checklist_tasks'])->update(['is_done' => true]);
+
+                // Set is_done to false for checklists not selected
+                $unselectedChecklists = $task->checklists->pluck('id')->diff($data['checklist_tasks']);
+                Checklist::whereIn('id', $unselectedChecklists)->update(['is_done' => false]);
+            }
         } else {
             logger('Task not found for ID: ' . $recordId);
         }

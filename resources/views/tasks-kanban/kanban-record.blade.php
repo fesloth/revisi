@@ -37,18 +37,12 @@ id="{{ $record->id }}"
     </div>
     {{-- Note: nanti bikin diatas checklist model team dan terlihan circle profile img pengguna yg di assign hrd ke task --}}
     <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; gap: 6px; justify-content: center;  align-items: center; ">
-            <x-heroicon-o-clock style="width: 15px; height: 15px;"/>
-            <p>Dec 18</p>
-    @if($record->checklists->isNotEmpty())
     <div style="background-color: #4d4b4b;  width: 45px; height: 25px; border-radius: 3px; display: flex; justify-content: space-evenly; align-items: center;">
         <x-heroicon-o-check style="width: 15px; height: 15px; color: #fff;"/>
         <p style="font-size: 12px;  color: #fff; padding-right: 5px;">
             {{ $record->checklists->where('user_id', $record->user->id)->where('is_done', true)->count() }}/{{ $record->checklists->where('user_id', $record->user->id)->count() }}
         </p>
     </div>
-    @endif
-        </div>
     <div style="display: flex; justify-content: center; align-items: center;">
         @foreach($record->users as $member)
             <div style="display: flex; justify-content: center; align-items: center; border: 1px solid; border-radius: 100%; width: 32px; height: 32px; transition: opacity 1s linear;"><p style="font-size: 15px; text-align: center;">{{ substr($record->user->name, 0, 2) }}</p></div>
