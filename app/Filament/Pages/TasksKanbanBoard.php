@@ -40,8 +40,14 @@ class TasksKanbanBoard extends KanbanBoard
 
         return [
             Select::make('user_id')
-                ->label('Member')
+                ->multiple()
+                ->label('Members')
                 ->options(User::pluck('name', 'id')->toArray())
+                ->afterStateHydrated(function (callable $set) use ($task) {
+                    if ($task) {
+                        $set('user_id', $task->users()->pluck('id')->toArray());
+                    }
+                })
                 ->required(),
             // belum bisa assign karyawan
             // bikin fitur delete (hanya pemnbuat task yg bisa men-delete task)
@@ -110,22 +116,21 @@ class TasksKanbanBoard extends KanbanBoard
         $task = Task::find($recordId);
 
         if ($task) {
-            logger('Syncing Labels: ', $data['labels'] ?? []);
-            logger('Syncing Checklists: ', $data['checklists'] ?? []);
+            logger('Syncing Users: ', $data['user_id'] ?? []);
 
             // Update task data
             $task->update($data);
+
+            // Sync users (many-to-many relationship)
+            $task->users()->sync($data['user_id'] ?? []);
 
             // Sync labels and checklists
             $task->labels()->sync($data['labels'] ?? []);
             $task->checklists()->sync($data['checklists'] ?? []);
 
-            // Set is_done to false for checklists that are not selected
+            // Handle checklist tasks if provided
             if (isset($data['checklist_tasks'])) {
-                // Update only the selected checklists
                 Checklist::whereIn('id', $data['checklist_tasks'])->update(['is_done' => true]);
-
-                // Set is_done to false for checklists not selected
                 $unselectedChecklists = $task->checklists->pluck('id')->diff($data['checklist_tasks']);
                 Checklist::whereIn('id', $unselectedChecklists)->update(['is_done' => false]);
             }
@@ -142,25 +147,18 @@ class TasksKanbanBoard extends KanbanBoard
                 ->form([
                     TextInput::make('title'),
                     TextArea::make('description'),
-                    Toggle::make('urgent')
-                        ->onColor('warning')
+                    Toggle::make('urgent')->onColor('warning'),
                 ])
                 ->mutateFormDataUsing(function ($data) {
-                    $data['user_id'] = auth()->id();
-
+                    $data['user_id'] = auth()->id();  // Only if you need to set a single user initially
                     return $data;
                 })
                 ->after(function (CreateAction $action) {
                     $task = $action->getRecord();
-
-                    $exists = $task->where('user_id', auth()->id())->exists();
-
-                    if (!$exists) {
-                        $task->taskUsers()->create([
-                            'user_id' => auth()->id(),
-                        ]);
-                    }
+                    // If you want to assign multiple users, ensure they are synced to the pivot table
+                    $task->users()->sync($data['user_id'] ?? []);  // Assuming 'user_id' is an array of user IDs
                 })
+
         ];
     }
 }
