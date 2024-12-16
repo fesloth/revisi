@@ -15,6 +15,8 @@ class UrgentTasksKanbanBoard extends KanbanBoard
 
     protected static ?string $navigationIcon = 'heroicon-o-star';
 
+    protected static string $headerView = 'tasks-kanban.kanban-urgent';
+
     protected static string $statusEnum = TaskStatus::class;
 
     protected function records(): Collection
