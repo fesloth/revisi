@@ -80,6 +80,6 @@ class Task extends Model implements Sortable
 
     public function checklistTasks()
     {
-        return $this->hasMany(ChecklistTask::class); // Or belongsToMany depending on your setup
+        return $this->belongsToMany(Checklist::class)->withPivot('is_done');
     }
 }

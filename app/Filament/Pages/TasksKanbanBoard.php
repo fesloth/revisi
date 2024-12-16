@@ -96,8 +96,6 @@ class TasksKanbanBoard extends KanbanBoard
                         }
                     }
                 }),
-
-
             Toggle::make('urgent')
                 ->onColor('warning')
         ];
