@@ -60,13 +60,13 @@ class TasksKanbanBoard extends KanbanBoard
         $task = Task::find($recordId);
 
         return [
-            Select::make('user_id')
+            Select::make('user_ids')
                 ->multiple()
                 ->label('Members')
                 ->options(User::pluck('name', 'id')->toArray())
                 ->afterStateHydrated(function (callable $set) use ($task) {
                     if ($task) {
-                        $set('user_id', $task->users()->pluck('id')->toArray());
+                        $set('user_ids', $task->users()->pluck('id')->toArray());
                     }
                 })
                 ->required(),
@@ -128,7 +128,7 @@ class TasksKanbanBoard extends KanbanBoard
                     }
                 }),
             Toggle::make('urgent')
-                ->onColor('warning'),
+                ->onColor('primary'),
         ];
     }
 
@@ -139,10 +139,11 @@ class TasksKanbanBoard extends KanbanBoard
         if ($task) {
 
             // Update task data
-            $task->update($data);
+            $task->update($data ?? []);
 
             $task->labels()->sync($data['labels'] ?? []);
             $task->checklists()->sync($data['checklists'] ?? []);
+            $task->users()->sync($data['user_ids']);
 
             if (isset($data['checklist_tasks'])) {
                 Checklist::whereIn('id', $data['checklist_tasks'])->update(['is_done' => true]);

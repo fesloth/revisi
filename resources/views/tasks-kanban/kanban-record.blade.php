@@ -15,10 +15,6 @@
     @endif
 >
     <!-- Existing content -->
-
-
-
-
 <div style="display: flex; justify-content: space-between;">
     <div>
         @if ($record->urgent)
@@ -34,7 +30,7 @@
         </div>
     </div>
     <div>
-        <button wire:click.prevent="deleteTask({{ $record->id }})" style="border: none; background: transparent; cursor: pointer;">
+        <button wire:click.prevent="deleteTask({{ $record->id }})" style="border: none;">
             <x-heroicon-o-x-mark style="width: 20px; height: 20px; color: #bb0f0f; margin-bottom: 8px;"/>
         </button>
     </div>
@@ -52,9 +48,15 @@
             {{ $record->checklists->where('user_id', $record->user->id)->where('is_done', true)->count() }}/{{ $record->checklists->where('user_id', $record->user->id)->count() }}
         </p>
     </div>
-    <div style="display: flex; justify-content: center; align-items: center;">
+    <div class="flex hover:-space-x-1 -space-x-3">
         @foreach($record->users as $member)
-            <div style="display: flex; justify-content: center; align-items: center; border: 1px solid; border-radius: 100%; width: 32px; height: 32px; transition: opacity 1s linear;"><p style="font-size: 15px; text-align: center;">{{ substr($record->user->name, 0, 2) }}</p></div>
+            <div
+                class="flex justify-center items-center border border-gray-300 rounded-full w-8 h-8 transition-opacity duration-1000"
+                aria-label="User: {{ $member->name }}">
+                <p class="text-sm font-medium text-center">
+                    {{ substr($member->name, 0, 2) }}
+                </p>
+            </div>
         @endforeach
     </div>
 </div>
