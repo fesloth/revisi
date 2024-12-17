@@ -1,5 +1,5 @@
 <div
-id="{{ $record->id }}"
+    id="{{ $record->id }}"
     wire:click="recordClicked('{{ $record->id }}', {{ @json_encode($record) }})"
     class="px-4 py-2 font-medium text-gray-600 transition bg-white rounded-lg record dark:bg-gray-700 cursor-grab dark:text-gray-200"
     @if($record->just_updated)
@@ -14,6 +14,10 @@ id="{{ $record->id }}"
         "
     @endif
 >
+    <!-- Existing content -->
+
+
+
 
 <div style="display: flex; justify-content: space-between;">
     <div>
@@ -29,7 +33,12 @@ id="{{ $record->id }}"
             @endforeach
         </div>
     </div>
-        <div class="text-xs text-right text-gray-400">{{ $record->user->name }}</div>
+    <div>
+        <button wire:click.prevent="deleteTask({{ $record->id }})" style="border: none; background: transparent; cursor: pointer;">
+            <x-heroicon-o-x-mark style="width: 20px; height: 20px; color: #bb0f0f; margin-bottom: 8px;"/>
+        </button>
+    </div>
+        {{-- <div class="text-xs text-right text-gray-400">{{ $record->user->name }}</div> --}}
     </div>
     {{ $record->title }}
     <div class="text-xs text-gray-400" style="padding-left: 8px; margin-bottom: 12px; border-left-width: 2px; margin-top: 8px;">

@@ -17,6 +17,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 use Filament\Forms\Components\Toggle;
+use Illuminate\Support\Facades\Auth;
 
 class TasksKanbanBoard extends KanbanBoard
 {
@@ -34,21 +35,41 @@ class TasksKanbanBoard extends KanbanBoard
 
     protected static string $statusEnum = TaskStatus::class;
 
+    public function deleteTask($taskId)
+    {
+        $task = Task::find($taskId);
+
+        if (!$task) {
+            session()->flash('error', 'Task not found.');
+            return;
+        }
+
+        // Cek apakah user yang sedang login adalah pembuat task
+        if ($task->user_id !== Auth::id()) {
+            session()->flash('error', 'You are not authorized to delete this task.');
+            return;
+        }
+
+        // Hapus task jika pengguna adalah pembuatnya
+        $task->delete();
+        session()->flash('success', 'Task deleted successfully.');
+    }
+
     protected function getEditModalFormSchema(null|int $recordId): array
     {
         $task = Task::find($recordId);
 
         return [
-            // Select::make('user_id')
-            //     ->multiple()
-            //     ->label('Members')
-            //     ->options(User::pluck('name', 'id')->toArray())
-            //     ->afterStateHydrated(function (callable $set) use ($task) {
-            //         if ($task) {
-            //             $set('user_id', $task->users()->pluck('id')->toArray());
-            //         }
-            //     })
-            //     ->required(),
+            Select::make('user_id')
+                ->multiple()
+                ->label('Members')
+                ->options(User::pluck('name', 'id')->toArray())
+                ->afterStateHydrated(function (callable $set) use ($task) {
+                    if ($task) {
+                        $set('user_id', $task->users()->pluck('id')->toArray());
+                    }
+                })
+                ->required(),
             // belum bisa assign karyawan
             // bikin fitur delete (hanya pemnbuat task yg bisa men-delete task)
             TextInput::make('title'),
@@ -116,19 +137,13 @@ class TasksKanbanBoard extends KanbanBoard
         $task = Task::find($recordId);
 
         if ($task) {
-            logger('Syncing Users: ', $data['user_id'] ?? []);
 
             // Update task data
             $task->update($data);
 
-            // Sync users (many-to-many relationship)
-            $task->users()->sync($data['user_id'] ?? []);
-
-            // Sync labels and checklists
             $task->labels()->sync($data['labels'] ?? []);
             $task->checklists()->sync($data['checklists'] ?? []);
 
-            // Handle checklist tasks if provided
             if (isset($data['checklist_tasks'])) {
                 Checklist::whereIn('id', $data['checklist_tasks'])->update(['is_done' => true]);
                 $unselectedChecklists = $task->checklists->pluck('id')->diff($data['checklist_tasks']);
@@ -150,13 +165,12 @@ class TasksKanbanBoard extends KanbanBoard
                     Toggle::make('urgent')->onColor('warning'),
                 ])
                 ->mutateFormDataUsing(function ($data) {
-                    $data['user_id'] = auth()->id();  // Only if you need to set a single user initially
+                    $data['user_id'] = auth()->id();
                     return $data;
                 })
                 ->after(function (CreateAction $action) {
                     $task = $action->getRecord();
-                    // If you want to assign multiple users, ensure they are synced to the pivot table
-                    $task->users()->sync($data['user_id'] ?? []);  // Assuming 'user_id' is an array of user IDs
+                    $task->users()->sync([auth()->id()]);
                 })
 
         ];
