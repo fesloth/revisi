@@ -30,9 +30,11 @@
         </div>
     </div>
     <div>
-        <button wire:click.prevent="deleteTask({{ $record->id }})" style="border: none;">
-            <x-heroicon-o-x-mark style="width: 20px; height: 20px; color: #bb0f0f; margin-bottom: 8px;"/>
-        </button>
+        <button
+        style="border: none;"
+        onclick="deleteTask({{ $record->id }})">
+        <x-heroicon-o-x-mark style="width: 20px; height: 20px; color: #bb0f0f; margin-bottom: 8px;" />
+    </button>
     </div>
         {{-- <div class="text-xs text-right text-gray-400">{{ $record->user->name }}</div> --}}
     </div>
@@ -45,13 +47,13 @@
     <div style="background-color: #4d4b4b;  width: 45px; height: 25px; border-radius: 3px; display: flex; justify-content: space-evenly; align-items: center;">
         <x-heroicon-o-check style="width: 15px; height: 15px; color: #fff;"/>
         <p style="font-size: 12px;  color: #fff; padding-right: 5px;">
-            {{ $record->checklists->where('user_id', $record->user->id)->where('is_done', true)->count() }}/{{ $record->checklists->where('user_id', $record->user->id)->count() }}
+            {{ $record->checklists->where('is_done', true)->count() }}/{{ $record->checklists->where('user_id', $record->user->id)->count() }}
         </p>
     </div>
-    <div class="flex hover:-space-x-1 -space-x-3">
+    <div class="flex -space-x-3 hover:-space-x-1">
         @foreach($record->users as $member)
             <div
-                class="flex justify-center items-center border border-gray-300 rounded-full w-8 h-8 transition-opacity duration-1000"
+                class="flex items-center justify-center w-8 h-8 transition-opacity duration-1000 border border-gray-300 rounded-full"
                 aria-label="User: {{ $member->name }}">
                 <p class="text-sm font-medium text-center">
                     {{ substr($member->name, 0, 2) }}
@@ -61,3 +63,28 @@
     </div>
 </div>
 </div>
+
+<script>
+    function deleteTask(taskId) {
+        if (confirm('Apakah Anda yakin ingin menghapus task ini?')) {
+            // Kirim request menggunakan fetch atau AJAX
+            fetch(`/tasks/${taskId}/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}', // Untuk keamanan Laravel
+                    'Accept': 'application/json',
+                },
+            }).then(response => {
+                if (response.ok) {
+                    alert('Task berhasil dihapus!');
+                    location.reload(); // Reload halaman setelah delete
+                } else {
+                    alert('Ini bukan task anda');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan.');
+            });
+        }
+    }
+</script>

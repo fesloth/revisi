@@ -35,26 +35,6 @@ class TasksKanbanBoard extends KanbanBoard
 
     protected static string $statusEnum = TaskStatus::class;
 
-    public function deleteTask($taskId)
-    {
-        $task = Task::find($taskId);
-
-        if (!$task) {
-            session()->flash('error', 'Task not found.');
-            return;
-        }
-
-        // Cek apakah user yang sedang login adalah pembuat task
-        if ($task->user_id !== Auth::id()) {
-            session()->flash('error', 'You are not authorized to delete this task.');
-            return;
-        }
-
-        // Hapus task jika pengguna adalah pembuatnya
-        $task->delete();
-        session()->flash('success', 'Task deleted successfully.');
-    }
-
     protected function getEditModalFormSchema(null|int $recordId): array
     {
         $task = Task::find($recordId);
